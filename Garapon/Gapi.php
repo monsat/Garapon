@@ -27,7 +27,7 @@ class Gapi
         $this->_url = $url;
     }
 
-    public function post($method, $data = [], $options = [])
+    public function post($method, $data = array(), $options = array())
     {
         $url = $this->_url . $method;
         $this->_setOption(CURLOPT_POST, 1);
@@ -37,13 +37,13 @@ class Gapi
         return $this->_send($url, $options);
     }
 
-    public function get($method, $data = [], $options = [])
+    public function get($method, $data = array(), $options = array())
     {
         $url = $this->_url . $method . '?' . http_build_query($data);
         return $this->_send($url, $options);
     }
 
-    public function _send($url, $options = [])
+    public function _send($url, $options = array())
     {
         $this->_init($url);
         if (!empty($options)) {
