@@ -10,7 +10,8 @@
 namespace Garapon;
 
 
-class Garapon {
+class Garapon
+{
 
     public $loginid;
     public $password;
