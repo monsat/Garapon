@@ -6,3 +6,10 @@
  * Time: 12:04
  * To change this template use File | Settings | File Templates.
  */
+
+require_once '../Garapon/Garapon.php';
+
+$garapon = new \Garapon\Garapon();
+echo $garapon->login();
+echo '<hr>';
+//echo $garapon->;

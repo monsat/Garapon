@@ -16,47 +16,56 @@ class Gapi
     public $isHttps = false;
     public $version = 'v3';
     public $timeout = 10;
-    protected $_url;
+    public $url;
     protected $_ch;
 
-    public function __construct($host, $version = null)
+    public function __construct()
     {
-        $url = $this->isHttps ? 'https://' : 'http://';
-        $version = $version ? : $this->version;
-        $url .= "$host/$version/";
-        $this->_url = $url;
     }
 
-    public function post($method, $data = array(), $options = array())
+    public function post($method = '', $query = array(), $data = array(), $options = array())
     {
-        $url = $this->_url . $method;
+        $this->url .= $method . '?' . http_build_query($query);
+        $this->_init($this->url);
         $this->_setOption(CURLOPT_POST, 1);
         if (!empty($data)) {
             $this->_setOption(CURLOPT_POSTFIELDS, $data);
         }
-        return $this->_send($url, $options);
+        return $this->_send($options);
     }
 
-    public function get($method, $data = array(), $options = array())
+    public function get($method = '', $query = array(), $options = array())
     {
-        $url = $this->_url . $method . '?' . http_build_query($data);
-        return $this->_send($url, $options);
+        $this->url .= $method . '?' . http_build_query($query);
+        $this->_init($this->url);
+        return $this->_send($options);
     }
 
-    public function _send($url, $options = array())
+    public function url($host, $version = null)
     {
-        $this->_init($url);
+        $url = $this->isHttps ? 'https://' : 'http://';
+        $version = $version ? : $this->version;
+        $url .= "$host/$version/";
+        $this->url = $url;
+    }
+
+    public function _send($options = array())
+    {
         if (!empty($options)) {
             $this->_setOption($options);
         }
-        return $this->_exec() && $this->_close();
+        $result = $this->_exec();
+        if ($result) {
+            $this->_close();
+        }
+        return $result;
     }
 
     protected function _init($url)
     {
         $ch = curl_init($url);
         if (!$ch) {
-            trigger_error('curl init failed');
+            new \Exception('curl init failed');
         } else {
             $this->_ch = $ch;
             $this->_setOption(CURLOPT_RETURNTRANSFER, true);
