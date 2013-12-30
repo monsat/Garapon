@@ -12,12 +12,12 @@ namespace Garapon;
 
 class Garapon {
 
-	public $loginid;
-	public $password;
-	public $md5passwd;
-	public $dev_id;
+    public $loginid;
+    public $password;
+    public $md5passwd;
+    public $dev_id;
 
-	public $gtvsession;
-	public $version;
+    public $gtvsession;
+    public $version;
 
 }
