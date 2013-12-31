@@ -10,6 +10,5 @@
 require_once '../Garapon/Garapon.php';
 
 $garapon = new \Garapon\Garapon();
-echo $garapon->login();
-echo '<hr>';
-//echo $garapon->;
+$results = $garapon->login()->request->connection ?: 'error';
+var_dump($results);

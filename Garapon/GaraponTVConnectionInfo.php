@@ -18,39 +18,29 @@ class GaraponTVConnectionInfo
     public $port;
     public $ts_port;
     public $version;
+    private $_map = array(
+        '0' => 'status',
+        'ipaddr' => 'ip',
+        'gipaddr' => 'global_ip',
+        'pipaddr' => 'private_ip',
+        'port' => 'port',
+        'port2' => 'ts_port',
+        'gtvver' => 'version',
+    );
 
-    public function __construct($string)
+    public function __construct($results)
     {
-        foreach (preg_split("/\r\n|\r|\n/", $string) as $record)
+        if (array_key_exists('1', $results)) {
+            throw new \Exception('ERROR: ' . $results['1']);
+        }
+        $keys = array_keys($this->_map);
+        foreach ($results as $key => $value)
         {
-            list($key, $value) = preg_split('/;/', $record);
-            switch ($key)
+            if (in_array($key, $keys))
             {
-                case '1':
-                    throw new \Exception('ERROR: ' . $value);
-                case 'ipaddr':
-                    $this->ip = $value;
-                    break;
-                case 'gipaddr':
-                    $this->global_ip = $value;
-                    break;
-                case 'pipaddr':
-                    $this->private_ip = $value;
-                    break;
-                case 'port':
-                    $this->port = $value;
-                    break;
-                case 'port2':
-                    $this->ts_port = $value;
-                    break;
-                case 'gtvver':
-                    $this->version = $value;
-                    break;
-                case '0':
-                    break;
-                default:
-                    echo 'WARNING: unknown response: ' . $key . ' = ' . $value;
-                    break;
+                $this->{$this->_map[$key]} = $value;
+            } else {
+                $this->$key = $value;
             }
         }
     }

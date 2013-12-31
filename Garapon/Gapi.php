@@ -21,9 +21,25 @@ class Gapi
 
     public function __construct()
     {
+        $this->request = new Request();
+        $this->response = new Response();
     }
 
-    public function post($method = '', $query = array(), $data = array(), $options = array())
+    public function request($method = '', $data = array(), $options = array())
+    {
+        $options = array() + $this->request->options;
+        $this->url .= $method . '?' . http_build_query($query);
+        $this->_init($this->url);
+        if ($options['method'] == 'post')
+        {
+            $this->_setOption(CURLOPT_POST, 1);
+            if (!empty($data)) {
+                $this->_setOption(CURLOPT_POSTFIELDS, $data);
+            }
+        }
+        return $this->_send($options);
+    }
+    public function post($method = '', $data = array(), $query = array(), $options = array())
     {
         $this->url .= $method . '?' . http_build_query($query);
         $this->_init($this->url);
@@ -58,6 +74,7 @@ class Gapi
         if ($result) {
             $this->_close();
         }
+        $result = $this->_parse($result);
         return $result;
     }
 
@@ -95,5 +112,26 @@ class Gapi
             $this->_ch = null;
         }
         return $result;
+    }
+
+    protected function _parse($result)
+    {
+        $results = array();
+        $result = preg_split("/\n/", $result);
+        if (!is_array($result))
+        {
+            return $result;
+        }
+        foreach ($result as $record)
+        {
+            if (empty($record) || strpos($record, ';') === false)
+            {
+                $results[] = $record;
+            } else {
+                list($key, $value) = preg_split('/;/', $record, 2);
+                $results[$key] = $value;
+            }
+        }
+        return $results;
     }
 }
