@@ -9,9 +9,6 @@
 
 namespace Garapon;
 
-require_once 'Gapi.php';
-require_once 'Setting.php';
-require_once 'GaraponTVConnectionInfo.php';
 require_once 'Request.php';
 require_once 'Response.php';
 
