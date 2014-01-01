@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Garapon;
+namespace CoEdo\Garapon;
 
 
 class Response {

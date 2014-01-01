@@ -9,6 +9,6 @@
 
 require_once '../Garapon/Garapon.php';
 
-$garapon = new \Garapon\Garapon();
+$garapon = new CoEdo\Garapon\Garapon();
 $results = $garapon->login()->request->connection ?: 'error';
 var_dump($results);
